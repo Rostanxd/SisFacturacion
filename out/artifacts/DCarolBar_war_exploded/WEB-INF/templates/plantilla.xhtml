@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</h:head>
+<h:body>
+    <table>
+        <tr style="vertical-align: top">
+            <td >
+                <ui:insert name="top">
+                    <h:form name = "menu">
+                        <img src="resources/images/dcarol_logo.jpg" alt="" width="220px" height="180px"/>
+                        <p:menu >
+                            <p:submenu label="Home" style=" border-color: transparent; background-image: url(resources/images/fondo.jpg);color:white;font-size:10pt; text-align:center;">
+                                <p:menuitem value="Principal Menu" style="font-size: smaller" url="index.xhtml?faces-redirect=true" />
+                            </p:submenu>
+                            <p:submenu label="Facturacion"  style=" border-color: transparent; background-image: url(resources/images/fondo.jpg);color:white;font-size:10pt; text-align:center;">
+                                <p:menuitem value="Facturar" style="font-size: smaller" action="factura.xhtml?faces-redirect=true" />
+                                <p:menuitem value="Cierre de Caja" style="font-size: smaller" action="index?faces-redirect=true" />
+                            </p:submenu>
+                            <p:submenu label="CRM" style="border-color: transparent;background-image: url(resources/images/fondo.jpg);color:white;font-size:10pt; text-align:center;">
+                                <p:menuitem value="Clientes" style="font-size: smaller" action="index?faces-redirect=true" />
+                            </p:submenu>
+                            <p:submenu label="Inventario" style="border-color: transparent;background-image: url(resources/images/fondo.jpg);color:white;font-size:10pt; text-align:center;">
+                                <p:menuitem value="Productos" style="font-size: smaller" action="producto?faces-redirect=true" />
+                            </p:submenu>
+                            <p:submenu label="Sistema y Conf." style="border-color: transparent;background-image: url(resources/images/fondo.jpg);color:white;font-size:10pt; text-align:center;">
+                                <p:menuitem value="Usuarios" style="font-size: smaller" action="usuario?faces-redirect=true" />
+                            </p:submenu>
+                        </p:menu>
+                    </h:form>
+                </ui:insert>
+            </td>
+            <td>
+                <ui:insert name="content">
+                </ui:insert>
+            </td>
+        </tr>
+    </table>
+</h:body>
+</html>

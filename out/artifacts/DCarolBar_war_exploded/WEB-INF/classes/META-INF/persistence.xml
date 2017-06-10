@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<persistence
+        xmlns:xsl="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xsi="jar://C:/Program Files (x86)/JetBrains/IntelliJ IDEA 2016.1.3/plugins/JavaEE/lib/javaee-impl.jar!/standardSchemas/persistence.xsd"
+        version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+
+    <persistence-unit name="Persistencia">
+
+        <class>es.rostan.hibernate.entidades.usuario</class>
+        <class>es.rostan.hibernate.entidades.facturaCab</class>
+        <class>es.rostan.hibernate.entidades.facturaDet</class>
+        <class>es.rostan.hibernate.entidades.facturaDetPK</class>
+        <class>es.rostan.hibernate.entidades.cliente</class>
+        <class>es.rostan.hibernate.entidades.producto</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/dbdcarol" />
+            <property name="javax.persistence.jdbc.user" value="root" />
+            <property name="javax.persistence.jdbc.password" value="123" />
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+            <property name="hibernate.show_sql" value="true" />
+
+            <!--validate: validate the schema, makes no changes to the database.-->
+            <!--update: update the schema model.-->
+            <!--create: creates the schema, destroying previous data.-->
+            <!--create-drop: drop the schema at the end of the session.-->
+
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+        </properties>
+    </persistence-unit>
+</persistence>

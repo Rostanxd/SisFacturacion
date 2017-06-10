@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<body>
+<ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+    <ui:define name="content">
+        <h:form id="form">
+            <f:event type="preRenderView" listener="#{productoBean.buscarProductos()}"/>
+
+            <!--<p:dataTable id="dataProductos" var="producto" value="#{productoBean.lstProductos}" style="font-size: smaller; width: 800px;" paginator="true" rows="4"   emptyMessage="No hay datos." scrollable="true" scrollHeight="500px">-->
+            <p:dataTable id="dataProductos" var="producto" value="#{productoBean.lstProductos}" selectionMode="single" selection="#{productoBean.producto}" rowKey="#{producto.prdCodigo}" style="font-size: smaller; width: 800px;" emptyMessage="No hay datos." scrollable="true" scrollHeight="500px">
+                <f:facet style="background-image:url(resources/images/fondo.jpg)" name="header"  >
+                    Productos
+                </f:facet>
+
+                <p:column headerText="Id" filterBy="#{producto.prdCodigo}" filterMatchMode="contains" style="width: 150px">
+                    <p:outputLabel value="#{producto.prdCodigo}"/>
+                </p:column>
+                <p:column headerText="Nombre" filterBy="#{producto.prdNombre}" filterMatchMode="contains" style="width: 150px">
+                    <p:outputLabel value="#{producto.prdNombre}"/>
+                </p:column>
+                <p:column headerText="Costo" filterBy="#{producto.prdCosto}" filterMatchMode="contains" style="width: 150px">
+                    <p:outputLabel value="#{producto.prdCosto}"/>
+                </p:column>
+                <p:column headerText="Precio" filterBy="#{producto.prdPrecio}" filterMatchMode="contains" style="width: 150px">
+                    <p:outputLabel value="#{producto.prdPrecio}"/>
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton value="Ingresar" id="ingresar" actionListener="#{productoBean.setBtnAccion('Ingresar')}" icon="ui-icon-disk" oncomplete="PF('wdgProducto').show();" update=":dlgProducto"/>
+                    <p:commandButton value="Modificar" id="modificar" actionListener="#{productoBean.setBtnAccion('Actualizar')}" icon="ui-icon-disk" oncomplete="PF('wdgProducto').show();" update=":dlgProducto" />
+                    <p:commandButton value="Inactivar" id="inactivar" actionListener="#{productoBean.setBtnAccion('Anular')}" icon="ui-icon-disk" />
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+
+        <!--Dialog de productos-->
+        <p:dialog id="dlgProducto" header="Producto" widgetVar="wdgProducto" modal="true" width="310" style="font-size: smaller">
+            <h:form>
+                <p:panelGrid >
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Codigo" style="font-weight: bold" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{productoBean.producto.prdCodigo}" disabled="true"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Nombre" style="font-weight: bold"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{productoBean.producto.prdNombre}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Estado" style="font-weight: bold"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{productoBean.producto.prdEstado}" disabled="true">
+                                <f:selectItem itemLabel="Activo" itemValue="A"/>
+                                <f:selectItem itemLabel="Inactivo" itemValue="I"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Costo" style="font-weight: bold"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{productoBean.producto.prdCosto}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Precio" style="font-weight: bold"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{productoBean.producto.prdPrecio}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:outputLabel value="Auditoria" style="font-weight: bold"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Usr. Modificación" style="font-weight: bold"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{productoBean.producto.prdUsrModificacion}" disabled="true"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Fec. Modificación" style="font-weight: bold"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{productoBean.producto.prdFecModificacion}" disabled="true"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <!--Botones-->
+                <p:commandButton value="#{productoBean.btnAccion}" action="#{productoBean.operar()}" oncomplete="PF('wdgProducto').hide()" update=":form"/>
+                <p:commandButton value="Anular" action="#{productoBean.anularProducto()}" oncomplete="PF('wdgProducto').hide()" update=":form"/>
+                <p:commandButton value="Cancel" oncomplete="PF('wdgProducto').hide()" immediate="true"/>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+</body>
+</html>

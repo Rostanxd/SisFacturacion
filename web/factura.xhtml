@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+<body>
+<ui:composition template="./WEB-INF/templates/plantilla.xhtml">
+    <ui:define name="content">
+        <h:form id="form">
+            <f:event type="preRenderView" listener="#{clienteBean.buscarClientes()}"/>
+            <f:event type="preRenderView" listener="#{productoBean.buscarProductos()}"/>
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:layout>
+                <p:layoutUnit position="west" resizable="true" size="822" minSize="822" maxSize="822">
+                    <p:commandButton value="Nueva" id="nueva" actionListener="#{facturaBean.nuevaFactura()}" icon="ui-icon-disk" update=":form"/>
+                    <p:commandButton value="Guardar" id="procesar" icon="ui-icon-disk" oncomplete="PF('wdgFacProcesar').show();" update=":form"/>
+                    <p:panelGrid >
+                        <f:facet name="header">
+                            <p:row>
+                                <p:outputLabel>Facturacion</p:outputLabel>
+                            </p:row>
+                        </f:facet>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Año:" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{facturaBean.facturaCab.facAnio}" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="Número:" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{facturaBean.facturaCab.facNumero}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Estado:" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu value="#{facturaBean.facturaCab.facEstado}" disabled="true">
+                                    <f:selectItem itemLabel="Activo" itemValue="A"/>
+                                    <f:selectItem itemLabel="Procesada" itemValue="P"/>
+                                    <f:selectItem itemLabel="Anulada" itemValue="N"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="Fecha:" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{facturaBean.facturaCab.facFecha}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Cliente:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText size="13" value="#{facturaBean.facturaCab.cliente.cliCodigo}" id="cliCodigo" disabled="true">
+                                    <p:ajax event="blur" update="cliNombres"/>
+                                </p:inputText>
+                            </p:column>
+                            <p:column colspan="2">
+                                <p:commandButton icon="ui-icon-search" title="Cliente" oncomplete="PF('wdgCliente').show();" update=":dlgCliente"/>
+                                <p:inputText size="40" value="#{facturaBean.facturaCab.cliente.cliNombres}" id="cliNombres" disabled="true"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                    <p:dataTable id="dataFacturaDet" var="facturaDet" value="#{facturaBean.lstFacturaDet}" emptyMessage="No data." scrollable="true" scrollWidth="100%" scrollHeight="500" >
+                        <p:column headerText="No." style="width: 50px;text-align: center">
+                            <p:outputLabel value="#{facturaDet.facLinea}"/>
+                        </p:column>
+                        <p:column headerText="Producto">
+                            <p:outputLabel value="#{facturaDet.producto.prdNombre}" id="prdNombre"/>
+                        </p:column>
+                        <p:column headerText="Cantidad">
+                            <p:inputText size="15" value="#{facturaDet.facCantidad}" id="facCantidad">
+                                <p:ajax event="keyup" update="facTotal" />
+                            </p:inputText>
+                        </p:column>
+                        <p:column headerText="Precio">
+                            <p:inputText size="15" value="#{facturaDet.facPrecio}" id="facPrecio">
+                                <p:ajax event="keyup" update="facTotal" />
+                            </p:inputText>
+                        </p:column>
+                        <p:column headerText="Total Lineal">
+                            <p:outputLabel value="#{facturaDet.facCantidad*facturaDet.facPrecio}" id="facTotal"/>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Total a Facturar"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{facturaBean.facturaCab.facTotDocmnto}"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <p:dataScroller value="#{productoBean.lstProductos}" var="producto" chunkSize="10">
+                        <f:facet name="header">
+                            Productos
+                        </f:facet>
+                        <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail">
+                            <img src="resources/images/smartwatch.png" alt="" width="128px" height="128px"/>
+                            <p:outputPanel>
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputText value="Codigo:" />
+                                    <h:outputText value="#{producto.prdCodigo}" style="font-weight: bold"/>
+                                    <h:outputText value="Nombre:" />
+                                    <h:outputText value="#{producto.prdNombre}" style="font-weight: bold"/>
+                                    <h:outputText value="Costo:" />
+                                    <h:outputText value="#{producto.prdCosto}" style="font-weight: bold"/>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                            <p:commandButton icon="ui-icon-search" title="Agregar" action="#{facturaBean.agregarProducto(producto)}" update=":form:dataFacturaDet"/>
+                        </h:panelGrid>
+                    </p:dataScroller>
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+        <!--Dialog de cliente-->
+        <p:dialog id="dlgCliente" header="Buscar" widgetVar="wdgCliente" modal="true" width="750" style="font-size: smaller">
+            <h:form>
+                <p:dataTable id="dataCliente" var="cliente" value="#{clienteBean.lstClientes}" emptyMessage="No data." scrollable="true" scrollWidth="100%" scrollHeight="500">
+                    <f:facet name="header">
+                        Clientes
+                    </f:facet>
+                    <p:column headerText="Cedula" filterBy="#{cliente.cliCodigo}" filterMatchMode="contains" style="width: 150px;text-align: center">
+                        <p:outputLabel value="#{cliente.cliCodigo}"/>
+                    </p:column>
+                    <p:column headerText="Nombre" filterBy="#{cliente.cliNombres}" filterMatchMode="contains">
+                        <p:outputLabel value="#{cliente.cliNombres}"/>
+                    </p:column>
+                    <p:column headerText="Seleccionar" style="width: 150px;text-align: center">
+                        <p:commandButton icon="ui-icon-search" action="#{facturaBean.asignarCliente(cliente)}" update=":form" oncomplete="PF('wdgCliente').hide()"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlgFacProcesar" header="Procesar Factura" widgetVar="wdgFacProcesar" modal="true" width="750" style="font-size: smaller">
+            <h:form>
+                <p:panelGrid>
+                    <p:commandButton icon="ui-icon-disk" value="Procesar" action="#{facturaBean.procesarFactura}" update=":form" oncomplete="PF('wdgFacProcesar').hide()"/>
+                    <p:commandButton icon="ui-icon-search" value="Cancelar" oncomplete="PF('wdgFacProcesar').hide()" immediate="true"/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>
+</body>
+</html>
